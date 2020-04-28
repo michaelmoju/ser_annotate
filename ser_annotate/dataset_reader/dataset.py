@@ -16,10 +16,14 @@ class CanoDict:
         self.c_text: str
         self.a_list = []
         self.labels = []
+        self.choices = []
     
     @property
     def meta(self):
-        return {'qid': self.qid, 'qtext': self.q_text, 'answer': self.a_list}
+        if self.choices:
+            return {'qid': self.qid, 'qtext': self.q_text, 'choices': str(self.choices), 'answer': str(self.a_list)}
+        else:
+            return {'qid': self.qid, 'qtext': self.q_text, 'answer': str(self.a_list)}
         
     @property
     def cano_format(self):
@@ -42,7 +46,7 @@ class CanoDict:
         self.labels = corrected_labels
         
     def merge_q(self):
-        offset = len(self.q_text) + 1
+        offset = len(self.q_text) + 1 # +1 for '\n' token
         
         for label in self.labels:
             label[0] += offset
