@@ -15,9 +15,12 @@ FGC_ANNOT_A = DATA_ROOT / "FGC" / "FGC_annot_1.7.13" / "FGC_release_A_labeled.js
 FGC_ANNOT_B = DATA_ROOT / "FGC" / "FGC_annot_1.7.13" / "FGC_release_B_labeled.json"
 FGC_ANNOT_C = DATA_ROOT / "FGC" / "FGC_annot_1.7.13" / "FGC_release_C_labeled.json"
 
-SSQA_XML_TRAIN = DATA_ROOT / "SSQA" / "Elementary_Social_Studies_v2.9" / "Train"
-SSQA_XML_DEV = DATA_ROOT / "SSQA" / "Elementary_Social_Studies_v2.9" / "Develop"
-SSQA_XML_TEXT = DATA_ROOT / "SSQA" / "Elementary_Social_Studies_v2.9" / "Test"
+SSQA_XML_TRAIN = DATA_ROOT / "SSQA" / "Elementary_Social_Studies_v3.0" / "Train"
+SSQA_XML_DEV = DATA_ROOT / "SSQA" / "Elementary_Social_Studies_v3.0" / "Develop"
+SSQA_XML_TEST = DATA_ROOT / "SSQA" / "Elementary_Social_Studies_v3.0" / "Test"
+
+# Annotation dir
+SSQA_ANNOT = RESULT_PATH / "SSQA_v3.0_annot"
 
 SSQA_OLD_BENCH_TRAIN = DATA_ROOT / "SSQA" / "SSQA_benchmark_v3.2_0312" / "train_202_HumanAnnotation_wLessonText_V.3.2"
 SSQA_OLD_BENCH_DEV = DATA_ROOT / "SSQA" / "SSQA_benchmark_v3.2_0312" / "dev_207_HumanAnnotation_wLessonText_V.3.2"

@@ -12,19 +12,34 @@ class CanoDict:
     def __init__(self):
         self.qid:str
         self.text: str
-        self.q_text: str
+        self.qtext: str
         self.c_text: str
         self.a_list = []
         self.labels = []
         self.choices = []
-    
+        
+    def __str__(self):
+        out = ""
+        out += "qid:{}\n".format(self.qid)
+        out += "qtext:{}\n".format(self.qtext)
+        out += "c_text:{}\n".format(self.c_text)
+        out += "labels:\n"
+        for label in self.labels:
+            out += "\t{}\n".format(label)
+        return out
+      
     @property
     def meta(self):
         if self.choices:
             return {'qid': self.qid, 'qtext': self.q_text, 'choices': str(self.choices), 'answer': str(self.a_list)}
         else:
             return {'qid': self.qid, 'qtext': self.q_text, 'answer': str(self.a_list)}
-        
+
+    @meta.setter
+    def meta(self, meta):
+        for k, v in meta.items():
+            setattr(self, k, v)
+            
     @property
     def cano_format(self):
         return {'text': self.text, 'labels': self.labels, 'meta': self.meta}
@@ -67,6 +82,10 @@ class CrpCano(dict):
         super(CrpCano, self).__init__(*args, **kwargs)
         
     def load_rls(self, rls_all):
+        """
+        Load old FGC release files.
+        input: json_load(FGC_release_all_dev.json)
+        """
         for d in tqdm(rls_all):
             cano_dict = CanoDict()
             cano_dict.c_text = d['DTEXT']
@@ -92,7 +111,7 @@ class CrpCano(dict):
             cano_dict.merg_q_ie()
             self[qid] = cano_dict
                     
-    def load_annot(self, annot_all):
+    def load_annot_fgc(self, annot_all):
         for annot in annot_all:
             cano_dict = CanoDict()
             qid = annot['text'][:7]
@@ -108,6 +127,21 @@ class CrpCano(dict):
             cano_dict.labels = [[label[0], label[1], label[2]] for label in label_set]
             cano_dict.meta['qid'] = qid
             self[qid] = cano_dict
+    
+    def load_annot_ssqa(self, annot_all):
+        for annot in annot_all:
+            cano_dict = CanoDict()
+            meta = annot['meta']
+            cano_dict.meta = meta
+            qid = cano_dict.qid
+            shift = len(cano_dict.qtext) + 1 # +1 because of \n
+            cano_dict.c_text = annot['text'][shift:]
+            for label in annot['labels']:
+                start = label[0] - shift
+                end = label[1] - shift
+                assert label[2] == "Keyword", "error file, label is not 'Keyword'!! {}".format(qid)
+                cano_dict.labels.append([start, end, 'Keyword'])
+            self[qid] = cano_dict
             
     def merge_rls(self, rls_all):
         rls_all_dict = {d['QUESTIONS'][0]['QID']: d for d in rls_all}
@@ -116,7 +150,4 @@ class CrpCano(dict):
             cano_dict.meta['question'] = rls_q['QTEXT']
             cano_dict.meta['answer'] = [a['ATEXT'] for a in rls_q['ANSWER']]
             cano_dict.meta['atype'] = rls_q['ATYPE_']
-            
 
-    
-    

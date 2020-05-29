@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- encoding: UTF-8 -*-
-from .std import *
+from ser_annotate.std import *
 
 _log = logging.getLogger(__name__)
 

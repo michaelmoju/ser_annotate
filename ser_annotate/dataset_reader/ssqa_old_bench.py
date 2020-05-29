@@ -1,11 +1,9 @@
 import difflib
 import re
 
-from .. import ssqa_util as Util
 from ..std import *
-from ..util import *
 
-_log = Logger(__name__)
+_log = logging.getLogger(__name__)
 _PUNCT_SET = frozenset(["，", ",", "、", "；", "。", "：", "！", "!", "？", "?"])
 
 def string_split(str):
@@ -115,3 +113,25 @@ def read_old_benchmark(fp):
         lprint("#Lesson:{}".format(len(myLessons)))
         lprint("#Question:{}".format(totQsNum))
         return myLessons
+
+
+def inspect_old_bench(benches):
+    num_p = 0
+    num_s = 0
+    num_q = 0
+    num_l = len(benches)
+    
+    for lesson_id, lesson in benches.items():
+        parags = lesson[0]
+        Qs = lesson[1]
+        
+        num_q += len(Qs)
+        num_p += len(parags)
+        
+        for pid, sents in parags:
+            num_s += len(sents)
+    
+    print("#Lesson:{}".format(num_l))
+    print("#Question:{}".format(num_q))
+    print("Mean #paragraphs per lesson:{}".format(num_p / num_l))
+    print("Mean #sentences per paragraph:{}".format(num_s / num_p))
