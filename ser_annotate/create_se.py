@@ -24,10 +24,15 @@ def annot2se(annot_fp):
 	for qid, q_annot in myCrpCano.items():
 		se = []
 		st_parags = str_lesson2st(q_annot.c_text)
+		
+		# Detect "No SE"
+		if q_annot.labels[0][0] == 0:
+			out_q_list.append({'qid': qid, 'qtext': q_annot.qtext, 'context': st_parags, 'se': se})
+			continue
 		for p_i, p in enumerate(st_parags):
 			for s_i, s in enumerate(p[2]):
 				if has_keyword(s, q_annot.labels):
 					se.append([p_i, s_i])
-		#         assert se, "No supporting evidence in qid:{}".format(qid)
+					assert se, "No supporting evidence in qid:{}".format(qid)
 		out_q_list.append({'qid': qid, 'qtext': q_annot.qtext, 'context': st_parags, 'se': se})
 	return out_q_list
